@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Arte e Fios Barbearia</string>
+    <string name="title_activity_main">Arte e Fios Barbearia</string>
+    <string name="package_name">br.com.arteefios.barbearia</string>
+    <string name="custom_url_scheme">br.com.arteefios.barbearia</string>
+</resources>

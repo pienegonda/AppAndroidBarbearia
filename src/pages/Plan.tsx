@@ -1,0 +1,9 @@
+import { useEffect,useState } from "react"; import { Crown, CalendarClock } from "lucide-react"; import { Layout } from "../components/Layout"; import { SectionTitle } from "../components/SectionTitle"; import { db } from "../db/db"; import type { Client } from "../types"; import { useAppState } from "../context";
+export function Plan({navigate}:{navigate:(p:string)=>void}) {
+ const [plans,setPlans]=useState<Client[]>([]); const {setClient}=useAppState();
+ useEffect(()=>{db.clients.toArray().then(cs=>setPlans(cs.filter(c=>c.isPlan)))},[]);
+ return <Layout navigate={navigate} dark><div className="pt-8"><SectionTitle eyebrow="Assinante" title="Seu plano" sub="Benefícios ativos sem acúmulo de pontos."/>
+ {!plans.length?<div className="rounded-3xl bg-white/5 p-5"><p>Nenhum assinante cadastrado.</p><p className="text-sm opacity-50 mt-2">Ative um cliente pelo Acesso do Mestre.</p></div>:
+ <div className="space-y-3">{plans.map(c=><button key={c.id} onClick={()=>{setClient(c);navigate("/servicos")}} className="w-full text-left rounded-3xl bg-brand-gold text-brand-dark p-6"><Crown/><div className="font-heading text-3xl mt-4">{c.planName||"Plano Ouro"}</div><div className="mt-1 opacity-70">{c.name}</div><div className="mt-6 text-sm">Visitas neste mês</div><div className="font-heading text-4xl mt-1">{String(c.planVisitsThisMonth??0).padStart(2,"0")} <span className="text-lg opacity-50">/ {String(c.planTotalVisits??4).padStart(2,"0")}</span></div><div className="mt-3 text-xs opacity-70">Toque para continuar atendimento</div></button>)}</div>}
+ <div className="mt-4 rounded-3xl bg-white/5 p-5"><div className="flex gap-3 items-center"><CalendarClock className="text-brand-gold"/><div><div className="font-semibold">Plano sem pontos</div><div className="text-sm opacity-50">As visitas são controladas pelo limite mensal.</div></div></div></div>
+ </div></Layout> }

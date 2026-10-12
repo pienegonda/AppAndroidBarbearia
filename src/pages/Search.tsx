@@ -1,0 +1,8 @@
+import { useEffect,useState } from "react"; import { Layout } from "../components/Layout"; import { SectionTitle } from "../components/SectionTitle"; import { db } from "../db/db"; import type { Client } from "../types"; import { useAppState } from "../context";
+export function Search({navigate}:{navigate:(p:string)=>void}) {
+ const [q,setQ]=useState(""); const [clients,setClients]=useState<Client[]>([]); const {setClient}=useAppState();
+ useEffect(()=>{db.clients.toArray().then(setClients)},[]);
+ const filtered=clients.filter(c=>(c.name+" "+(c.phone||"")).toLowerCase().includes(q.toLowerCase()));
+ return <Layout navigate={navigate}><div className="pt-8"><SectionTitle eyebrow="Cliente" title="Busca manual" sub="Pesquise por nome ou telefone."/><input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Digite para buscar..." className="w-full rounded-2xl border border-brand-dark/10 bg-brand-surface px-4 py-4 mb-5 outline-none focus:border-brand-gold"/>
+ <div className="space-y-3">{filtered.map(c=><button key={c.id} onClick={()=>{setClient(c);sessionStorage.removeItem("arte-fios-services");navigate("/servicos")}} className="w-full rounded-2xl bg-brand-surface p-4 text-left border border-brand-dark/5"><div className="flex justify-between"><div className="font-semibold">{c.name}</div>{c.isPlan&&<span className="text-xs text-brand-gold font-bold">PLANO</span>}</div><div className="text-xs opacity-50 mt-1">{c.phone||"Sem telefone"} · {c.points} pontos</div></button>)}{!filtered.length&&<div className="text-center py-10 opacity-50">Nenhum cliente encontrado.</div>}</div></div></Layout>
+}
